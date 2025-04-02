@@ -1,0 +1,14 @@
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+.cache
+.vscode
+.DS_Store
+.idea/
+Desktop.ini 
+dist
+dist/

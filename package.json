@@ -1,0 +1,52 @@
+{
+  "name": "playwright-ajv-schema-validator",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    ".github/**/*",
+    ".npmrc",
+    "dist/**/*",
+    "tests/**/*",
+    "LICENSE",
+    "package.json",
+    "playwright.config.ts",
+    "README.md",
+    "tsconfig.json"
+  ],
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "tsc",
+    "prerelease": "npm run build",
+    "release": "npm cache clean --force && npm version patch && npm publish --force"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sclavijosuero/playwright-ajv-schema-validator.git"
+  },
+  "keywords": [
+    "plugin",
+    "playwright",
+    "ajv",
+    "schema",
+    "validator",
+    "json"
+  ],
+  "author": "Sebastian Clavijo Suero",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sclavijosuero/playwright-ajv-schema-validator/issues"
+  },
+  "homepage": "https://github.com/sclavijosuero/playwright-ajv-schema-validator#readme",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.51.1",
+    "@types/node": "^22.13.17",
+    "core-ajv-schema-validator": "file:core-ajv-schema-validator-1.0.0.tgz",
+    "pw-api-plugin": "^2.0.1",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "highlight.js": "^11.11.1"
+  }
+}
