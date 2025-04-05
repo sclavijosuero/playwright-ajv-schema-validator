@@ -994,6 +994,7 @@
         },
         "Order": {
             "type": "object",
+            "required": [ "shipDate" ],
             "properties": {
                 "id": {
                     "type": "integer",

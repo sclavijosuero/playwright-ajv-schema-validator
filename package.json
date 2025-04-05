@@ -1,8 +1,9 @@
 {
   "name": "playwright-ajv-schema-validator",
   "version": "1.0.0",
+  "description": "A Playwright plugin for API schema validation against plain JSON schemas, Swagger schema documents. Built on the robust core-ajv-schema-validator plugin and powered by the Ajv JSON Schema Validator, it delivers results in a clear, user-friendly format, simplifying the process of identifying and addressing schema issues.",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/types.d.ts",
   "files": [
     ".github/**/*",
     ".npmrc",
@@ -38,7 +39,6 @@
     "url": "https://github.com/sclavijosuero/playwright-ajv-schema-validator/issues"
   },
   "homepage": "https://github.com/sclavijosuero/playwright-ajv-schema-validator#readme",
-  "description": "",
   "devDependencies": {
     "@playwright/test": "^1.51.1",
     "@types/node": "^22.13.17",
