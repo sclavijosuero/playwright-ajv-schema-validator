@@ -140,7 +140,7 @@ export const validateSchema = async (fixtures: object, data: any, schema: any, p
                             if (resBody) {
                                 resBody.innerHTML = dataHtml;
                             }
-                            
+
                             let lastTitleLabel = document.querySelector('.pw-api-response:last-of-type label.title-property:last-of-type')
                             if (lastTitleLabel) {
                                 lastTitleLabel.innerHTML = lastTitleLabel.innerHTML +
@@ -171,18 +171,7 @@ const _createDataHtmlPage = async (dataHtml: string, numErrors?: number, errors?
         <head>
             <meta charset="utf-8">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/${hljsVersion}/styles/vs.min.css"/>
-            ${numErrors? `<style>
-                body { font-family: monospace; margin: 20px; }
-                h3 { font-size: 1.5em; margin-bottom: 10px; }
-                .card { margin-bottom: 10px; list-style: none; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background-color:rgb(238, 251, 255); text-align: left; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); transition: 0.3s;}
-                .total-errors { font-size: 1.5em; font-weight: bold; color: #c10000; margin-left: 20px; padding-left: 15px;}
-                .total-errors:hover { background-color: rgb(220, 240, 250); }
-                .hljs  { margin-bottom: 10px; padding: 10px; margin-left: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: rgb(238, 251, 255); box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); transition: 0.3s; }
-                .hljs:hover { background-color: rgb(220, 240, 250); }
-                ul { padding-left: 20px; }
-                li { font-size: 1.1em; text-wrap: wrap; overflow-wrap: break-word; margin-bottom: 10px; list-style: none; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background-color:rgb(238, 251, 255); text-align: left; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); transition: 0.3s;}
-                li:hover { background-color: rgb(220, 240, 250); }
-            </style>` : ''}
+            ${numErrors? _inlineStyles() : ''}
         </head>
         <body>
             ${errors ? `<h3>Number of schema errors</h3><div class="card total-errors"> ${numErrors}</div>` : ''}
@@ -191,6 +180,26 @@ const _createDataHtmlPage = async (dataHtml: string, numErrors?: number, errors?
             ${errors ? `</div><h3>AJV errors</h3><ul>${errors.map(obj => `<li class="card">${JSON.stringify(obj)}</li>`).join('')}</ul>` : ''}
         </body>
     </html>`;
+}
+
+/**
+ * Generates a string containing inline CSS styles for an HTML document.
+ *
+ * @returns {string} A string containing the inline CSS styles.
+ */
+const _inlineStyles = () => {
+    return `<style>
+        body { font-family: monospace; margin: 20px; }
+        h3 { font-size: 1.5em; margin-bottom: 10px; }
+         .card { margin-bottom: 10px; list-style: none; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background-color:rgb(238, 251, 255); text-align: left; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); transition: 0.3s;}
+        .total-errors { font-size: 1.5em; font-weight: bold; color: #c10000; margin-left: 20px; padding-left: 15px;}
+        .total-errors:hover { background-color: rgb(220, 240, 250); }
+        .hljs  { margin-bottom: 10px; padding: 10px; margin-left: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: rgb(238, 251, 255); box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); transition: 0.3s; }
+        .hljs:hover { background-color: rgb(220, 240, 250); }
+        ul { padding-left: 20px; }
+        li { font-size: 1.1em; text-wrap: wrap; overflow-wrap: break-word; margin-bottom: 10px; list-style: none; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background-color:rgb(238, 251, 255); text-align: left; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); transition: 0.3s;}
+        li:hover { background-color: rgb(220, 240, 250); }
+    </style>`
 }
 
 
