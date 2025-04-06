@@ -126,7 +126,7 @@ export const validateSchema = async (fixtures: object, data: any, schema: any, p
             if (page && process.env.LOG_API_UI !== 'false') {
                 const html = await _createDataHtmlPage(dataHtml)
 
-                const pageContent = await page.evaluate(async ({ dataHtml, html }) => {
+                const pageContent = await page.evaluate(async ({ dataHtml, html, errors }) => {
                     const documentHtml = document.documentElement?.innerHTML
 
                     if (documentHtml) {
@@ -140,10 +140,16 @@ export const validateSchema = async (fixtures: object, data: any, schema: any, p
                             if (resBody) {
                                 resBody.innerHTML = dataHtml;
                             }
+                            
+                            let lastTitleLabel = document.querySelector('.pw-api-response:last-of-type label.title-property:last-of-type')
+                            if (lastTitleLabel) {
+                                lastTitleLabel.innerHTML = lastTitleLabel.innerHTML +
+                                    `- <label style="color: #c10000;">Number schema errors: ${errors.length}</label>`
+                            }
                         }
                     }
 
-                }, { dataHtml, html })
+                }, { dataHtml, html, errors })
             }
 
 
@@ -165,7 +171,7 @@ const _createDataHtmlPage = async (dataHtml: string, numErrors?: number, errors?
         <head>
             <meta charset="utf-8">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/${hljsVersion}/styles/vs.min.css"/>
-            ${numErrors ? `<style>
+            ${numErrors? `<style>
                 body { font-family: monospace; margin: 20px; }
                 h3 { font-size: 1.5em; margin-bottom: 10px; }
                 .card { margin-bottom: 10px; list-style: none; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background-color:rgb(238, 251, 255); text-align: left; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); transition: 0.3s;}
