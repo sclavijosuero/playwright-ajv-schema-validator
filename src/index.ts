@@ -35,7 +35,7 @@ const iconMoreErrors = '➕'
 
 const issuesStylesDefault: IssuesStyles = {
     iconPropertyError: '⚠️',
-    colorPropertyError: '#ee930a',
+    colorPropertyError: '#d67e09',
     iconPropertyMissing: '❌',
     colorPropertyMissing: '#c10000'
 }
@@ -104,16 +104,26 @@ export const validateSchema = async (fixtures: object, data: any, schema: any, p
             expect(errors).toBeNull()
         } else {
             // Report the issues in the console
+            const dataHtml = _transformDataToHtml(dataMismatches, issuesStyles || issuesStylesDefault)
+
             await test.step(`${errorResponseBodyAgainstSchema}`, async () => {
                 console.log(errorResponseBodyAgainstSchema)
                 console.log('Number of schema errors: ', errors.length)
-                console.log('Data mismatches:\n', dataMismatches)
+                console.log('Schema mismatches in data:\n', dataMismatches)
                 console.log('AJV errors:\n', errors)
+
+
+                if (process.env.LOG_API_REPORT === 'true') {
+                    const html = await _createDataHtmlPage(dataHtml, errors.length, errors)
+                    test.info().attach(`${errorResponseBodyAgainstSchema}`, {
+                        body: html,
+                        contentType: 'text/html'
+                    })
+                }
             })
 
             // Report the issues in the PW UI
             if (page && process.env.LOG_API_UI !== 'false') {
-                const dataHtml = _transformDataToHtml(dataMismatches, issuesStyles || issuesStylesDefault)
                 const html = await _createDataHtmlPage(dataHtml)
 
                 const pageContent = await page.evaluate(async ({ dataHtml, html }) => {
@@ -136,6 +146,7 @@ export const validateSchema = async (fixtures: object, data: any, schema: any, p
                 }, { dataHtml, html })
             }
 
+
             expect(errors).toBeNull()
         }
     }
@@ -143,22 +154,37 @@ export const validateSchema = async (fixtures: object, data: any, schema: any, p
     return validationResult;
 }
 
-
 /**
  * Generates an HTML page string with the provided content embedded in the body.
- *
+*
  * @param dataHtml - The HTML content to be included within the body of the generated page.
  * @returns A promise that resolves to a complete HTML page string.
  */
-const _createDataHtmlPage = async (dataHtml: string) => {
+const _createDataHtmlPage = async (dataHtml: string, numErrors?: number, errors?: Array<any[] | null>) => {
     return `<html>
         <head>
+            <meta charset="utf-8">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/${hljsVersion}/styles/vs.min.css"/>
+            ${numErrors ? `<style>
+                body { font-family: monospace; margin: 20px; }
+                h3 { font-size: 1.5em; margin-bottom: 10px; }
+                .card { margin-bottom: 10px; list-style: none; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background-color:rgb(238, 251, 255); text-align: left; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); transition: 0.3s;}
+                .total-errors { font-size: 1.5em; font-weight: bold; color: #c10000; margin-left: 20px; padding-left: 15px;}
+                .total-errors:hover { background-color: rgb(220, 240, 250); }
+                .hljs  { margin-bottom: 10px; padding: 10px; margin-left: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: rgb(238, 251, 255); box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); transition: 0.3s; }
+                .hljs:hover { background-color: rgb(220, 240, 250); }
+                ul { padding-left: 20px; }
+                li { font-size: 1.1em; text-wrap: wrap; overflow-wrap: break-word; margin-bottom: 10px; list-style: none; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background-color:rgb(238, 251, 255); text-align: left; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3); transition: 0.3s;}
+                li:hover { background-color: rgb(220, 240, 250); }
+            </style>` : ''}
         </head>
         <body>
+            ${errors ? `<h3>Number of schema errors</h3><div class="card total-errors"> ${numErrors}</div>` : ''}
+            ${errors ? `<h3>Schema mismatches in data</h3>` : ''}
             ${dataHtml}
+            ${errors ? `</div><h3>AJV errors</h3><ul>${errors.map(obj => `<li class="card">${JSON.stringify(obj)}</li>`).join('')}</ul>` : ''}
         </body>
-    </html>`
+    </html>`;
 }
 
 
