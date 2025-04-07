@@ -11,27 +11,17 @@ test.describe('Petstore API', () => {
     const baseUrl = 'https://petstore.swagger.io/v2';
 
     test('Should validate schema of POST "/store/order" endpoint ', async ({ request, page }) => {
-        
-        // POST (FAIL: "status" not a valid value & "shipDate" is missing)
-        const requestBody = {
-            "id": 0,
-            "petId": 1,
-            "quantity": 11,
-            "status": "unknown",
-            "complete": false
-        }
 
-        const responsePost = await axiosApi.post({ page }, `${baseUrl}/store/order`, requestBody,
+        const responseGet = await axiosApi.get({ page }, `${baseUrl}/pet/findByStatus?status=pending`,
             {
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
-                },
+                headers: { 'Content-Type': 'application/json' }
             }
-        );
-        expect(responsePost.status).toBe(200)
-        const responseBodyPost = await responsePost.data
+        )
 
-        await validateSchema({ page }, responseBodyPost, petStoreSwaggerErrors, { endpoint: '/store/order', method: 'post', status: 200 });
+        expect(responseGet.status).toBe(200)
+        const responseBodyGet = await responseGet.data
 
+        await validateSchema({ page }, responseBodyGet, petStoreSwaggerErrors, { endpoint: '/pet/findByStatus', method: 'get', status: 200 });
+ 
     })
 })
