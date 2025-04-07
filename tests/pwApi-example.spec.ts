@@ -6,21 +6,13 @@ import { validateSchema } from '../src/index';
 
 import petStoreSwaggerErrors from '../tests-data/schemas/petstore-swagger-errors.json';
 
-const issuesStyles = {
-    iconPropertyError: '🟦',
-    colorPropertyError: '#5178eb',
-    iconPropertyMissing: '🟪',
-    colorPropertyMissing: '#800080'
-}
-
 test.describe('Petstore API', () => {
 
     const baseUrl = 'https://petstore.swagger.io/v2';
 
     test('Should validate schema of POST "/store/order" endpoint ', async ({ request, page }) => {
-        console.log(petStoreSwaggerErrors)
 
-        // // POST 1 (PASS)
+        // POST 1 (PASS)
         const requestBody1 = {
             "id": 0,
             "petId": 0,
@@ -62,7 +54,6 @@ test.describe('Petstore API', () => {
         expect(responsePost2.status()).toBe(200)
         const responseBodyPost2 = await responsePost2.json()
         await validateSchema({ page }, responseBodyPost2, petStoreSwaggerErrors, { endpoint: '/store/order', method: 'post', status: 200 });
-        // await validateSchema({ page }, responseBodyPost2, petStoreSwaggerErrors, { endpoint: '/store/order', method: 'post', status: 200 }, issuesStyles);
 
     })
 })

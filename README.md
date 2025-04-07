@@ -243,34 +243,255 @@ npx playwright test --ui
 
 #### **`pwApi`** Class
 
+```js
+import { expect } from '@playwright/test';
+import { pwApi, test } from 'pw-api-plugin';
+
+import { validateSchema } from 'playwright-ajv-schema-validator';
+
+// Swagger 2.0 Schema Document for the API under test
+import petStoreSwagger from '../tests-data/schemas/petstore-swagger.json';
+
+test.describe('Petstore API', () => {
+
+    const baseUrl = 'https://petstore.swagger.io/v2';
+
+    test('Should validate schema of POST "/store/order" endpoint ', async ({ request, page }) => {
+
+        // EXAMPLE POST 1 (PASS)
+        const requestBody1 = {
+            "id": 0,
+            "petId": 0,
+            "quantity": 0,
+            "shipDate": "2024-01-01T00:57:29.231Z",
+            "status": "placed",
+            "complete": false
+        }
+
+        const responsePost1 = await pwApi.post({ request, page }, `${baseUrl}/store/order`,
+            {
+                data: requestBody1,
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            }
+        );
+        expect(responsePost1.status()).toBe(200)
+        const responseBodyPost1 = await responsePost1.json()
+
+        await validateSchema({ page }, responseBodyPost1, petStoreSwagger, { endpoint: '/store/order', method: 'post', status: 200 });
+
+
+        // EXAMPLE POST 2 (FAIL: "status" not a valid value & "shipDate" is missing)
+        const requestBody2 = {
+            "id": 0,
+            "petId": 1,
+            "quantity": 11,
+            "status": "unknown",
+            "complete": false
+        }
+
+        const responsePost2 = await pwApi.post({ request, page }, `${baseUrl}/store/order`,
+            {
+                data: requestBody2,
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            }
+        );
+        expect(responsePost2.status()).toBe(200)
+        const responseBodyPost2 = await responsePost2.json()
+
+        await validateSchema({ page }, responseBodyPost2, petStoreSwagger, { endpoint: '/store/order', method: 'post', status: 200 });
+
+    })
+})
+```
 
 #### **`axiosApi`** Class
 
+```js
+import { expect } from '@playwright/test';
+import { axiosApi, test } from 'pw-api-plugin';
+
+import { validateSchema } from 'playwright-ajv-schema-validator';
+
+// Swagger 2.0 Schema Document for the API under test
+import petStoreSwagger from '../tests-data/schemas/petstore-swagger.json';
+
+test.describe('Petstore API', () => {
+
+    const baseUrl = 'https://petstore.swagger.io/v2';
+
+    test('Should validate schema of POST "/store/order" endpoint ', async ({ request, page }) => {
+
+        // EXAMPLE POST 1 (PASS)
+        const requestBody1 = {
+            "id": 0,
+            "petId": 0,
+            "quantity": 0,
+            "shipDate": "2024-01-01T00:57:29.231Z",
+            "status": "placed",
+            "complete": false
+        }
+
+        const responsePost1 = await axiosApi.post({ page }, `${baseUrl}/store/order`,
+            requestBody1,
+            {
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            }
+        );
+        expect(responsePost1.status).toBe(200)
+        const responseBodyPost1 = await responsePost1.data
+
+        await validateSchema({ page }, responseBodyPost1, petStoreSwagger, { endpoint: '/store/order', method: 'post', status: 200 });
+
+
+        // EXAMPLE POST 2 (FAIL: "status" not a valid value & "shipDate" is missing)
+        const requestBody2 = {
+            "id": 0,
+            "petId": 1,
+            "quantity": 11,
+            "status": "unknown",
+            "complete": false
+        }
+
+        const responsePost2 = await axiosApi.post({ page }, `${baseUrl}/store/order`,
+            requestBody2,
+            {
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            }
+        );
+        expect(responsePost2.status).toBe(200)
+        const responseBodyPost2 = await responsePost2.data
+
+        await validateSchema({ page }, responseBodyPost2, petStoreSwagger, { endpoint: '/store/order', method: 'post', status: 200 });
+
+    })
+})
+```
 
 ### Using Playwright Standard Requests
 
+```js
+import { expect } from '@playwright/test';
+import { pwApi, test } from 'pw-api-plugin';
+
+import { validateSchema } from 'playwright-ajv-schema-validator';
+
+// Swagger 2.0 Schema Document for the API under test
+import petStoreSwagger from '../tests-data/schemas/petstore-swagger.json';
+
+test.describe('Petstore API', () => {
+
+    const baseUrl = 'https://petstore.swagger.io/v2';
+
+    test('Should validate schema of POST "/store/order" endpoint ', async ({ request, page }) => {
+
+        // EXAMPLE POST 1 (PASS)
+        const requestBody1 = {
+            "id": 0,
+            "petId": 0,
+            "quantity": 0,
+            "shipDate": "2024-01-01T00:57:29.231Z",
+            "status": "placed",
+            "complete": false
+        }
+
+        const responsePost1 = await request.post(`${baseUrl}/store/order`,
+            {
+                data: requestBody1,
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            }
+        );
+        expect(responsePost1.status()).toBe(200)
+        const responseBodyPost1 = await responsePost1.json()
+
+        await validateSchema({ page }, responseBodyPost1, petStoreSwagger, { endpoint: '/store/order', method: 'post', status: 200 });
+
+
+        // EXAMPLE POST 2 (FAIL: "status" not a valid value & "shipDate" is missing)
+        const requestBody2 = {
+            "id": 0,
+            "petId": 1,
+            "quantity": 11,
+            "status": "unknown",
+            "complete": false
+        }
+
+        const responsePost2 = await request.post(`${baseUrl}/store/order`,
+            {
+                data: requestBody2,
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            }
+        );
+        expect(responsePost2.status()).toBe(200)
+        const responseBodyPost2 = await responsePost2.json()
+
+        await validateSchema({ page }, responseBodyPost2, petStoreSwagger, { endpoint: '/store/order', method: 'post', status: 200 });
+
+    })
+})
+```
 
 
 ## PRESENTATION OF RESULTS
 
-### Used with **`pw-api-plugin`**
+### Schema Validation Pass
+
+![Schema Validation Pass](images/validation-pass.png)
+
+### Schema Validation Fail Using **`pw-api-plugin`**
+
+![Schema Validation Fail Using pw-api-plugin](images/fail-pw-api-plugin.png)
 
 
-### Used as Standalone Plugin with Playwright Standard Requests
+### Schema Validation Fail Using Playwright Standard API **`request`**
+
+![Schema Validation Fail Using Playwright Standard API request](images/fail-pw-standard.png)
 
 
-### Define Custom Styles for Schema Errors in Your Tests
+### Schema Validation Fails with Custom Styles Used in your Tests
+
+![Schema Validation Fails with Custom Styles Used in your Tests](images/fail-custom.png)
 
 
 ### Disable Schema Validation
 
+Setting environment variable `DISABLE_SCHEMA_VALIDATION` to `"true"`.
 
-### Attach Schema Validation Details in HTML Report
-
-
-### Trace Viewer
+![Disable Schema Validation](images/disable-validation.png)
 
 
+### Attach Schema Validation Failure Details in HTML Report
+
+Setting environment variable `LOG_API_REPORT` to `"true"`.
+
+![Attach Schema Validation Details in HTML Report - Schema Validation Test Results](images/html-report-pw-api-plugin-1.png)
+
+
+![Attach Schema Validation Details in HTML Report - Schema Validation Failure Details](images/html-report-pw-api-plugin-2.png)
+
+
+### Schema Validation Details in Trace Viewer
+
+Executing command `npx playwright test --trace on`.
+
+![Schema Validation Details in Trace Viewer - Using pw-api-plugin](images/trace-viewer-1.png)
+
+_Schema Validation Details in Trace Viewer - Using pw-api-plugin._
+
+
+![Schema Validation Details in Trace Viewer - Using Playwright Standard API request](images/trace-viewer-2.png)
+_Schema Validation Details in Trace Viewer - Using Playwright Standard API request._
 
 
 ## LICENSE

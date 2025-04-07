@@ -79,7 +79,7 @@ const msgDisableSchemaValidation = 'The Playwright environment variable "DISABLE
  * );
  * console.log(validationResult.errors, validationResult.dataMismatches);
  */
-export const validateSchema = async (fixtures: object, data: any, schema: any, path?: object, issuesStyles?: object): Promise<object> => {
+const validateSchema = async (fixtures: object, data: any, schema: any, path?: object, issuesStyles?: object): Promise<object> => {
 
     // Default values (when validation is disabled)
     let validationResult: ValidationResult = { errors: null, dataMismatches: data }
@@ -105,6 +105,7 @@ export const validateSchema = async (fixtures: object, data: any, schema: any, p
         } else {
             // Report the issues in the console
             const dataHtml = _transformDataToHtml(dataMismatches, issuesStyles || issuesStylesDefault)
+            const html = await _createDataHtmlPage(dataHtml, errors.length, errors)
 
             await test.step(`${errorResponseBodyAgainstSchema}`, async () => {
                 console.log(errorResponseBodyAgainstSchema)
@@ -114,7 +115,7 @@ export const validateSchema = async (fixtures: object, data: any, schema: any, p
 
 
                 if (process.env.LOG_API_REPORT === 'true') {
-                    const html = await _createDataHtmlPage(dataHtml, errors.length, errors)
+                    // const html = await _createDataHtmlPage(dataHtml, errors.length, errors)
                     test.info().attach(`${errorResponseBodyAgainstSchema}`, {
                         body: html,
                         contentType: 'text/html'
@@ -124,7 +125,7 @@ export const validateSchema = async (fixtures: object, data: any, schema: any, p
 
             // Report the issues in the PW UI
             if (page && process.env.LOG_API_UI !== 'false') {
-                const html = await _createDataHtmlPage(dataHtml)
+                // const html = await _createDataHtmlPage(dataHtml)
 
                 const pageContent = await page.evaluate(async ({ dataHtml, html, errors }) => {
                     const documentHtml = document.documentElement?.innerHTML
@@ -136,7 +137,7 @@ export const validateSchema = async (fixtures: object, data: any, schema: any, p
                         }
                         else {
                             // Using pw-api-plugin: page is not empty, so find the response body element to replace with data mismatches
-                            let resBody = document.querySelector('[data-tab-type="res-body"]:last-of-type')
+                            let resBody = document.querySelector('[id^="res-body-"]:last-of-type')
                             if (resBody) {
                                 resBody.innerHTML = dataHtml;
                             }
@@ -160,6 +161,8 @@ export const validateSchema = async (fixtures: object, data: any, schema: any, p
     return validationResult;
 }
 
+export { validateSchema }
+
 /**
  * Generates an HTML page string with the provided content embedded in the body.
 *
@@ -170,6 +173,7 @@ const _createDataHtmlPage = async (dataHtml: string, numErrors?: number, errors?
     return `<html>
         <head>
             <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/${hljsVersion}/styles/vs.min.css"/>
             ${numErrors? _inlineStyles() : ''}
         </head>
