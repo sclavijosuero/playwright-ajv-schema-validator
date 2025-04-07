@@ -41,12 +41,12 @@
   "homepage": "https://github.com/sclavijosuero/playwright-ajv-schema-validator#readme",
   "devDependencies": {
     "@playwright/test": "^1.51.1",
-    "@types/node": "^22.13.17",
-    "pw-api-plugin": "^2.0.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "pw-api-plugin": "^2.0.1"
   },
   "dependencies": {
-    "core-ajv-schema-validator": "^1.0.0",
-    "highlight.js": "^11.11.1"
+    "@types/node": "^22.13.17",
+    "highlight.js": "^11.11.1",
+    "core-ajv-schema-validator": "^1.0.0"
   }
 }

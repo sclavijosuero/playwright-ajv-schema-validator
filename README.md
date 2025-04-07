@@ -521,7 +521,7 @@ Thank you for your support!
 ## CHANGELOG
 
 ### [1.0.1]
-- Fix dependency with `core-ajv-schema-validator`.
+- Fix @types/node dependencies and use target "es2017".
 
 ### [1.0.0]
 - Initial release.
