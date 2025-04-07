@@ -520,6 +520,9 @@ Thank you for your support!
 
 ## CHANGELOG
 
+### [1.0.1]
+- Fix dependency with `core-ajv-schema-validator`.
+
 ### [1.0.0]
 - Initial release.
 
