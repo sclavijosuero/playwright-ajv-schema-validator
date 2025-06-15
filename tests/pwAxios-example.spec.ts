@@ -6,11 +6,11 @@ import { validateSchema } from '../src/index';
 // Swagger 2.0 Schema Document for the API under test
 import petStoreSwaggerErrors from '../tests-data/schemas/petstore-swagger-errors.json';
 
-test.describe('Petstore API', () => {
+test.describe('Petstore API - Axios GET validation', () => {
 
     const baseUrl = 'https://petstore.swagger.io/v2';
 
-    test('Should validate schema of POST "/store/order" endpoint ', async ({ request, page }) => {
+    test.fail('Should validate schema of GET "/pet/findByStatus" endpoint ', async ({ request, page }) => {
 
         const responseGet = await axiosApi.get({ page }, `${baseUrl}/pet/findByStatus?status=pending`,
             {

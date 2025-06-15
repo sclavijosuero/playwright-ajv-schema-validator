@@ -20,6 +20,7 @@ A Playwright plugin for API schema validation against plain JSON schemas, Swagge
 
 - Environment variables:
   -  `DISABLE_SCHEMA_VALIDATION` to disable schema validation in your tests even when function `validateSchema()` is present.
+  -  `DISABLE_SUCCESS_LOG` to disable success logs in your tests.
   -  `LOG_API_UI` to enable the display of API call details in **Playwright UI** and **Trace Viewer** .
   -  `LOG_API_REPORT` to enable the display of API call details in **HTML Report** .
 

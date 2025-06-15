@@ -99,7 +99,9 @@ const validateSchema = async (fixtures: object, data: any, schema: any, path?: o
         if (!errors) {
             // Schema validation passed
             await test.step(`${passResponseBodyAgainstSchema}`, async () => {
-                console.log(passResponseBodyAgainstSchema)
+                if (process.env.DISABLE_SUCCESS_LOG !== 'true') {
+                    console.log(passResponseBodyAgainstSchema)
+                }
             })
             expect(errors).toBeNull()
         } else {

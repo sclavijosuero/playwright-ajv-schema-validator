@@ -6,11 +6,11 @@ import { validateSchema } from '../src/index';
 
 import petStoreSwaggerErrors from '../tests-data/schemas/petstore-swagger-errors.json';
 
-test.describe('Petstore API', () => {
+test.describe('Petstore API - Playwright POST validation', () => {
 
     const baseUrl = 'https://petstore.swagger.io/v2';
 
-    test('Should validate schema of POST "/store/order" endpoint ', async ({ request, page }) => {
+    test.fail('Should validate schema of POST "/store/order" endpoint ', async ({ request, page }) => {
 
         // POST 1 (PASS)
         const requestBody1 = {

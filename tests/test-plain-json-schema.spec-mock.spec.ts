@@ -23,13 +23,13 @@ test.describe('Suite Plain JSON Schema', async () => {
         expect(mockDataPass.length).toBe(3)
     })
 
-    test(`Test Plain JSON Schema - Mock Data Fail - Styles override`, async ({ page }) => {
+    test.fail(`Test Plain JSON Schema - Mock Data Fail - Styles override`, async ({ page }) => {
         // Fail with Styles override
         await validateSchema({ page }, mockDataFail, plainJsonSchema, undefined, issuesStyles);
         expect(mockDataPass.length).toBe(3)
     })
 
-    test(`Test Plain JSON Schema - Mock Data Pass and Fail (2 validations)`, async ({ page }) => {
+    test.fail(`Test Plain JSON Schema - Mock Data Pass and Fail (2 validations)`, async ({ page }) => {
         // Pass
         await validateSchema({ page }, mockDataPass, plainJsonSchema);
         expect(mockDataPass.length).toBe(3)

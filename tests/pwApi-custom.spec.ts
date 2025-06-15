@@ -13,11 +13,11 @@ const issuesStyles = {
     colorPropertyMissing: '#800080'
 }
 
-test.describe('Petstore API', () => {
+test.describe('Petstore API - Playwright GET validation', () => {
 
     const baseUrl = 'https://petstore.swagger.io/v2';
 
-    test('Should validate schema of POST "/store/order" endpoint ', async ({ request, page }) => {
+    test.fail('Should validate schema of GET "/pet/findByStatus" endpoint ', async ({ request, page }) => {
 
         // GET (FAIL SCHEMA VALIDATION)
         const responseGet = await pwApi.get({ request, page }, `${baseUrl}/pet/findByStatus?status=pending`,
